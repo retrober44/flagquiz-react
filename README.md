@@ -9,3 +9,7 @@ POC of a flag quiz to assign flags to the correct countries.  Is implemented wit
 - Use .class if something needs to be named indefinitely often
 
 # Component structure
+
+# Getting Started
+- frontend: npm start
+- backend: node server.js
