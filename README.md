@@ -6,7 +6,7 @@ POC of a flag quiz to assign flags to the correct countries. It is implemented w
 - npm
 
 # Component structure
-flaggenquiz/
+flagquiz/
 ├── backend/
 │   ├── routes/
 │   │   └── quiz.js
@@ -22,12 +22,12 @@ flaggenquiz/
 
 # Start quiz
 ## Start Frontend
-cd frontend
-npm start
+1. cd frontend
+2. npm start
 
 ## Start Backend
-cd backend
-node server.js
+1. cd backend
+2. node server.js
 
 # Coding conventions
 
