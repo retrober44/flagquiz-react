@@ -1,5 +1,5 @@
 # Flagquiz
-POC of a flag quiz to assign flags to the correct countries.  Is implemented with React in the frontend and ASP as API in the backend.
+POC of a flag quiz to assign flags to the correct countries.  Is implemented with React in the frontend and node in the backend.
 
 # Coding conventions
 
