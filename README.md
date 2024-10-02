@@ -23,7 +23,8 @@ flagquiz/
 # Start quiz
 ## Start Frontend
 1. cd frontend
-2. npm start
+2. npm install
+3. npm start
 
 ## Start Backend
 1. cd backend
