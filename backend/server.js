@@ -1,39 +1,25 @@
 const express = require('express');
 const cors = require('cors');
+const { swaggerUi, swaggerSpecs } = require('./swagger'); // Swagger-Module importieren
 
 const app = express();
 const port = 5000;
 
-function getRandomElements(arr, count) {
-  const shuffled = arr.sort(() => 0.5 - Math.random());
-  return shuffled.slice(0, count);
-}
+app.use(express.json());
+app.use(cors());
 
-const countries = require('./../laender.json');
+// Swagger UI
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
 
-app.get('/api/quiz', (req, res) => {
+// Swagger nodes
+app.use('/api', require('./routes/getQuiz'));
 
-  const countryCodes = Object.keys(countries);
+app.use('/api', require('./routes/getScoreboard'));
 
-  const correctCountryCode = countryCodes[Math.floor(Math.random()*countryCodes.length)];
-  const correctCountryName = countries[correctCountryCode]
+app.use('/api', require('./routes/setScore'));
 
-  const otherCountyCodes = countryCodes.filter(code => code !== correctCountryCode);
-  const wrongCountryNames = getRandomElements(otherCountyCodes, 3).map(code => countries[code]);
 
-  const options = [...wrongCountryNames, correctCountryName].sort(() => 0.5 - Math.random());
-  
-  const response = {
-    flag: `/flags/${correctCountryCode.toLowerCase()}.png`,
-    options: options,   
-    correctAnswer: correctCountryName, 
-  }
-
-  res.json(response)
-});
-
-app.use('/flags', express.static('flags'));
 
 app.listen(port, () => {
-  console.log(`Server läuft auf http://localhost:${port}`);
+  console.log(`Server is running on http://localhost:${port}`);
 });
