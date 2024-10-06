@@ -1,5 +1,7 @@
 # Flagquiz
-POC of a flag quiz to assign flags to the correct countries. It is implemented with React in the frontend and node in the backend.
+A flag quiz to assign flags to the correct countries. It is implemented with React in the frontend and node.js in the backend.
+
+![alt text](image.png)
 
 # Prerequisites
 - Node.js (Version 14 oder höher)

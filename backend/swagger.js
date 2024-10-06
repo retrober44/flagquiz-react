@@ -1,10 +1,9 @@
 const swaggerJsdoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
 
-// Swagger-Konfigurationsoptionen
 const swaggerOptions = {
   definition: {
-    openapi: '3.0.0', // OpenAPI-Spezifikation Version
+    openapi: '3.0.0',
     info: {
       title: 'Quiz API',
       version: '1.0.0',
@@ -12,14 +11,14 @@ const swaggerOptions = {
     },
     servers: [
       {
-        url: 'http://localhost:5000', // URL deines Servers
+        url: 'http://localhost:5000',
       },
     ],
   },
-  apis: ['./routes/*.js'],// Pfad zu den API-Dokumentationsdateien (hier wird es aus server.js genommen)
+  apis: ['./routes/*.js'],
 };
 
-// Swagger-Dokumentation generieren
+// Generate swagger documentation
 const swaggerSpecs = swaggerJsdoc(swaggerOptions);
 
 module.exports = { swaggerUi, swaggerSpecs };

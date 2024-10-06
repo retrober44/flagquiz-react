@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-const { swaggerUi, swaggerSpecs } = require('./swagger'); // Swagger-Module importieren
+const { swaggerUi, swaggerSpecs } = require('./swagger');
 
 const app = express();
 const port = 5000;
