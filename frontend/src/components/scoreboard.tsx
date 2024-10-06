@@ -1,8 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef  } from 'react';
 import { styled } from '@mui/material/styles';
 import {
-  Box,
-  Grid,
   Typography,
   Button,
   Dialog,
@@ -15,118 +13,131 @@ import {
   TextField,
 } from '@mui/material';
 
-interface ScoreboardProps{
-    points: number
+interface ScoreboardProps {
+  points: number;
 }
 
-interface ScoreboardEntry  {
-    name?: string;
-    score?: number;
+interface ScoreboardEntry {
+  name?: string;
+  score?: number;
 }
 
-const Scoreboard = (props:ScoreboardProps) => {
+const Scoreboard = (props: ScoreboardProps) => {
 
-    const [showScoreboard, setShowScoreboard] = React.useState(false);
-    const handleScoreboard = () => {
+  const BootstrapDialog = styled(Dialog)(({ theme }) => ({
+    '& .MuiDialogContent-root': {
+      padding: theme.spacing(2),
+    },
+    '& .MuiDialogActions-root': {
+      padding: theme.spacing(1),
+    },
+  }));
+  
+  const [showScoreboard, setShowScoreboard] = useState(false);
+  const [scoreboard, setScoreboard] = useState<ScoreboardEntry[]>([]);
+  const loadScoreboard = () => {
+    fetch('/api/scoreboard')
+      .then((response) => response.json())
+      .then((data) => setScoreboard(data))
+      .catch((error) => console.error('Error fetching quiz data:', error));
+  };
+  useEffect(() => {
+    loadScoreboard();
+  }, []);
+
+  const handleCloseScoreboard = () => {
+    setShowScoreboard(false);
+  };
+
+  const inputRef = useRef<HTMLInputElement>(null);
+  const handleSendScore = () => {
+    const name = inputRef.current?.value || '';
+
+    const data = { name: name, score: props.points };
+
+    fetch('/api/score', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    })
+      .then((response) => response.json())
+      .then((result) => {
+        console.log('Successfully sent:', result);
+        loadScoreboard()
         setShowScoreboard(true);
-      };
-    const [scoreboard, setScoreboard] = useState<ScoreboardEntry[]>([]);
-    useEffect(() => {
-        fetch('/api/scoreboard')
-          .then(response => response.json())
-          .then(data => setScoreboard(data))
-          .catch(error => console.error('Error fetching quiz data:', error));
-        }, []);
-    
-    const [open, setOpen] = React.useState(true);
+      })
+      .catch((error) => {
+        console.error('Error sending data:', error);
+      });
+  };
 
-    const handleClickOpen = () => {
-      setOpen(true);
-    };
-    const handleClose = () => {
-        window.location.reload();
-    };
+  const handleClose = () => {
+    window.location.reload();
+  };
 
-
-    
-    const BootstrapDialog = styled(Dialog)(({ theme }) => ({
-      '& .MuiDialogContent-root': {
-        padding: theme.spacing(2),
-      },
-      '& .MuiDialogActions-root': {
-        padding: theme.spacing(1),
-      },
-    }));
-
-
-return(
-
+  return (
     <React.Fragment>
-
-        
-
-<BootstrapDialog
-        onClose={handleClose}
+      <BootstrapDialog
+        onClose={() => {}}
         aria-labelledby="customized-dialog-title"
-        open={open}
+        open={true}
+        disableEscapeKeyDown
       >
-
-<DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
-          Leider falsch. 
+        <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
+          Leider falsch.
         </DialogTitle>
 
-
         <DialogContent dividers>
-
-
-          <Typography gutterBottom>
-            Deine Punktzahl: {props.points}
-          </Typography>
-          <Typography gutterBottom>
-          <TextField id="outlined-basic" label="Name" variant="outlined" />
-          <Button variant="contained">
-            Scoreboard anzeigen
-          </Button>
-          </Typography>
-
+          {!showScoreboard && (
+            <>
+              <Typography gutterBottom>Deine Punktzahl: {props.points}</Typography>
+              <Typography gutterBottom>
+                <TextField 
+                  id="outlined-basic" 
+                  label="Name" 
+                  variant="outlined" 
+                  inputRef={inputRef}
+                />
+                <Button variant="contained" onClick={handleSendScore}>
+                  Senden
+                </Button>
+              </Typography>
+            </>
+          )}
 
           {showScoreboard && (
-            <List> 
-                {scoreboard
+            <List>
+              {scoreboard
                 .sort((a, b) => (b.score ?? 0) - (a.score ?? 0)) // Sortiere nach 'score', wobei 'undefined' als 0 behandelt wird
                 .map((item, index) => (
-                    <ListItem key={index}>
-                    <ListItemText 
-                        primary={`${index + 1}. ${item.name}`} 
-                        secondary={`Score: ${item.score ?? 'No Score'}`} 
+                  <ListItem key={index}>
+                    <ListItemText
+                      primary={`${index + 1}. ${item.name}`}
+                      secondary={`Score: ${item.score ?? 'No Score'}`}
                     />
-                    </ListItem>
+                  </ListItem>
                 ))}
             </List>
-            )}
-
-
-
+          )}
         </DialogContent>
         <DialogActions>
-          <Button autoFocus onClick={handleScoreboard}>
-            Scoreboard anzeigen
-          </Button>
-          <Button autoFocus onClick={handleClose}>
-          Neuer Versuch
-          </Button>
+          {!showScoreboard && (
+            <Button autoFocus onClick={() => setShowScoreboard(true)}>
+              Scoreboard anzeigen
+            </Button>
+          )}
+          {showScoreboard && (
+            <Button autoFocus onClick={handleCloseScoreboard}>
+              Scoreboard ausblenden
+            </Button>
+          )}
+          <Button autoFocus onClick={handleClose}>Neuer Versuch</Button>
         </DialogActions>
-
-
-        </BootstrapDialog>
-
-
-
-        </React.Fragment>
-)
-
-
-
-}
+      </BootstrapDialog>
+    </React.Fragment>
+  );
+};
 
 export default Scoreboard;
