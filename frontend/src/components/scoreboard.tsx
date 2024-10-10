@@ -15,6 +15,7 @@ import {
 
 interface ScoreboardProps {
   points: number;
+  correctAnswer:string;
 }
 
 interface ScoreboardEntry {
@@ -86,7 +87,7 @@ const Scoreboard = (props: ScoreboardProps) => {
         disableEscapeKeyDown
       >
         <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
-          Leider falsch.
+          Leider falsch. {props.correctAnswer}
         </DialogTitle>
 
         <DialogContent dividers>

@@ -41,20 +41,21 @@ const Quiz = () => {
     }
     if (selectedOption && selectedOption !== quiz.correctAnswer){
       console.log("ist vorbei aller");
-      setAyy(true);
+      setShowScoreboard(true);
     }
     console.log(points);
   }, [selectedOption]);
 
-  const [ayy, setAyy] = useState(false);
+  const [showScoreboard, setShowScoreboard] = useState(false);
  
     
     return (
       <React.Fragment>
 
-      {ayy &&(        
+      {showScoreboard && (
         <Scoreboard
           points={points}
+          correctAnswer={quiz.correctAnswer ?? "defaultAnswer"}
         />
       )}
 
